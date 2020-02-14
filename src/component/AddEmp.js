@@ -48,7 +48,6 @@ class AddEmp extends Component{
         //    }
     }
 
-    //console.log(config.config.token);
     axios.post(url,data,configs)
         //{ headers: {"Authorization" : `Basic ${config.config.token}`}}
         //)
@@ -57,7 +56,6 @@ class AddEmp extends Component{
        console.log(user);
 
        this.setState({newEmployee  : ""});
-       return <Redirect to='/' />
      })
      .catch(err =>{
        console.log(err);
