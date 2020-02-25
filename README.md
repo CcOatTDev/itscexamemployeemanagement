@@ -1,3 +1,20 @@
+## Docker
+
+Create Images docker
+### `docker build -t docker-react .`
+
+Run Container
+### `docker run --rm -p 3000:3000 docker-react:latest`
+
+Find
+### `docker-machine ip`
+
+
+Open "docker-machine i":3000 to view it in the browser.<br />
+OR Open http://192.168.99.100:3000 to view it in the browser.<br />
+OR Open http://localhost:3000 to view it in the browser.<br />
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
