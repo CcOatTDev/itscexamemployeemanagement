@@ -6,8 +6,23 @@ let employee = {
     email : ''
 }
 
+class EmployeeModel {
+    constructor(){
+        this.employee = {
+            _id : '',
+            firstname : '',
+            lastname : '',
+            birthday : '',
+            email : ''
+        }
+    }
+
+
+}
+
 export default {
-    employee
+    employee,
+    EmployeeModel
 }
  
   

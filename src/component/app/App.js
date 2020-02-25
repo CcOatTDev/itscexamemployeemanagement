@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import config from '../../comfig/config';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Button from 'react-bootstrap/Button';
+import Table from 'react-bootstrap/Table';
 
 class App extends Component {
   constructor(props){
@@ -16,15 +19,23 @@ class App extends Component {
   }
 
   updateEmployee = (id) =>{
-    console.log(id);
+    this.props.history.push({
+      pathname :"/Employee/"+id+"/Update",
+      userid : id,
+      type : "Update"
+    });
   }
 
   deleteEmployee = (id) =>{
     console.log(id);
   }
 
-  componentDidMount(){
- 
+  componentWillMount(){
+
+  }
+
+  loadDataList =()=>{
+    
     const  url = "https://dummy-api.cm.edu/employees";
     const configs = {
       auth: { 
@@ -37,7 +48,7 @@ class App extends Component {
     .then(res => {
       const users =res.data;
       this.setState({employeeList : users})
-      console.log(this.state.employeeList);
+      //console.log(this.state.employeeList);
 
     })
     .catch(err =>{
@@ -45,41 +56,61 @@ class App extends Component {
     })
   }
 
+  componentDidMount(){
+    this.loadDataList();
+  }
+
+  componentDidUpdate(){
+    this.loadDataList();
+  }
+
+  convertDate = (str) => {
+      var date = new Date(str),
+      mnth = ("0" + (date.getMonth() + 1)).slice(-2), 
+      day = ("0" + date.getDate()).slice(-2);
+    return [date.getFullYear(), mnth, day].join("-");
+  }
+
 
   render(){
     return (
       <div className="App">
         <header className="App-header">
-        </header>
-        <Link to="/AddEmployee"><button> Add Employee </button></Link>
-      
-        <br/>
-        <br/>
-        <table id='employee' border="1">
-         <tbody>
-            <tr>                 
-                  <td>Firstname</td>
-                  <td>Lastnaame</td>
-                  <td>Birthday</td>
-                  <td>Email</td>
-                  <td></td>
-                  <td></td>
-            </tr>
-            {
-              this.state.employeeList.map(data =>
-                <tr key={data._id}> 
-                  <td>{data.firstname}</td>
-                  <td>{data.lastname}</td>
-                  <td>{data.birthday}</td>
-                  <td>{data.email}</td>
-                  <td><button onClick={this.updateEmployee.bind(this,data._id)}> Update </button></td>
-                  <td><button onClick={this.deleteEmployee.bind(this,data._id)}> Delete </button></td>
-                </tr>
-              )
+       
+            <br/>
+            <Table  striped bordered hover variant="dark">
+            <tbody>
+              <tr>                 
+                    <td>Firstname</td>
+                    <td>Lastnaame</td>
+                    <td>Email</td>
+                    <td>BirthDay</td>
+                    <td colSpan ='2'>
+                    <Link to={{
+              pathname :"/Employee/Add"
             }
-          </tbody>
-        </table>
+          }>
+        <Button> Add Employee </Button></Link>
 
+                    </td>
+              </tr>
+              {
+                this.state.employeeList.map(data =>
+                  <tr key={data._id}> 
+                    <td>{data.firstname}</td>
+                    <td>{data.lastname}</td>
+                    <td>{data.email}</td>
+                    <td>
+                    { this.convertDate(data.birthday)}
+                    </td>
+                    <td><Button  variant="success" onClick={this.updateEmployee.bind(this,data._id)}> Update </Button></td>
+                    <td><Button  variant="danger" onClick={this.deleteEmployee.bind(this,data._id)}> Delete </Button></td>
+                  </tr>
+                )
+              }
+            </tbody>
+          </Table>
+        </header>
       </div>
     );  
   }
