@@ -141,7 +141,7 @@ getDataByUserID =(userid) => {
         this.addUser(e);
       }
 
-      this.props.history.push("/");
+      this.props.history.push("/EmployeeList");
  
 
       this.setState({newEmployee  : ""});

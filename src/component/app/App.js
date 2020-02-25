@@ -5,6 +5,11 @@ import config from '../../comfig/config';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Alert from 'react-bootstrap/Alert';
+
 
 class App extends Component {
   constructor(props){
@@ -14,54 +19,19 @@ class App extends Component {
       employeeList : []
     }
 
-    this.updateEmployee = this.updateEmployee.bind(this);
-    this.deleteEmployee = this.deleteEmployee.bind(this);
-  }
-
-  updateEmployee = (id) =>{
-    this.props.history.push({
-      pathname :"/Employee/"+id+"/Update",
-      userid : id,
-      type : "Update"
-    });
-  }
-
-  deleteEmployee = (id) =>{
-    console.log(id);
   }
 
   componentWillMount(){
 
   }
 
-  loadDataList =()=>{
-    
-    const  url = "https://dummy-api.cm.edu/employees";
-    const configs = {
-      auth: { 
-         username : config.config.username,
-         password : config.config.password
-      }
-    }
-
-    axios.get(url,configs)
-    .then(res => {
-      const users =res.data;
-      this.setState({employeeList : users})
-      //console.log(this.state.employeeList);
-
-    })
-    .catch(err =>{
-      console.log(err);
-    })
-  }
 
   componentDidMount(){
-    this.loadDataList();
+
   }
 
   componentDidUpdate(){
-    this.loadDataList();
+
   }
 
   convertDate = (str) => {
@@ -71,45 +41,84 @@ class App extends Component {
     return [date.getFullYear(), mnth, day].join("-");
   }
 
+  handleSubmit(e) {
+     // e.preventDefault();
+    const  url = "https://dummy-api.cm.edu/employees";
+
+    const et = e.target;
+    const  userConfig = {
+      username : et.username.value,
+      password : et.password.value,
+    };
+
+    const configs = {
+      auth: { 
+         username : userConfig.username,
+         password : userConfig.password
+      }
+    }
+
+    axios.get(url,configs)
+    .then(res => {
+      const users =res.data;
+      //this.setState({employeeList : users})
+      //console.log(users);
+
+      config.config = {
+        username : userConfig.username,
+        password : userConfig.password
+      }
+
+      console.log(config.config );
+      
+      window.location.href = "/EmployeeList"; 
+      //this.props.history.push("/EmployeeList");
+    })
+    .catch(err =>{
+      console.log(err);
+      config.config = {
+        username : "",
+        password : ""
+      }
+
+      return (
+        <Alert key='' variant='danger'>
+            Login Fail !
+        </Alert> 
+        );
+    })
+
+
+}
+
 
   render(){
     return (
+      
       <div className="App">
         <header className="App-header">
-       
-            <br/>
-            <Table  striped bordered hover variant="dark">
-            <tbody>
-              <tr>                 
-                    <td>Firstname</td>
-                    <td>Lastnaame</td>
-                    <td>Email</td>
-                    <td>BirthDay</td>
-                    <td colSpan ='2'>
-                    <Link to={{
-              pathname :"/Employee/Add"
-            }
-          }>
-        <Button> Add Employee </Button></Link>
 
-                    </td>
-              </tr>
-              {
-                this.state.employeeList.map(data =>
-                  <tr key={data._id}> 
-                    <td>{data.firstname}</td>
-                    <td>{data.lastname}</td>
-                    <td>{data.email}</td>
-                    <td>
-                    { this.convertDate(data.birthday)}
-                    </td>
-                    <td><Button  variant="success" onClick={this.updateEmployee.bind(this,data._id)}> Update </Button></td>
-                    <td><Button  variant="danger" onClick={this.deleteEmployee.bind(this,data._id)}> Delete </Button></td>
-                  </tr>
-                )
-              }
-            </tbody>
-          </Table>
+          <Form onSubmit={this.handleSubmit}>
+                    <Row>
+                    <Col></Col>
+                    <Col>
+                    <Form.Group  >
+                        <Form.Label>Username</Form.Label> 
+                        <Form.Control type="text" id="username"  name="username"   required />
+                    </Form.Group>
+                    </Col>
+                    <Col>
+                    <Form.Group >
+                        <Form.Label>Password</Form.Label>    
+                        <Form.Control type="password" id="password" name="password"  required />
+                    </Form.Group>
+                    </Col>
+                    <Col></Col>
+                    </Row>
+                    <center><Button variant="primary"  type="submit" value="Submit"> Log in</Button></center>
+          </Form>
+
+
         </header>
       </div>
     );  
