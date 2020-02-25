@@ -1,5 +1,3 @@
-
-
 # base image
 FROM node:12.14.1
 
@@ -14,6 +12,13 @@ ENV PATH /usr/src/app/node_modules/.bin:$PATH
 COPY package.json /usr/src/app/package.json
 RUN npm install 
 RUN npm install react-scripts -g --silent
+RUN npm install -g redux --save
+RUN npm install --save redux
+RUN npm install react-dom
+RUN npm install react-router-dom
+RUN npm install axios --save
+RUN npm install react-bootstrap bootstrap
+
 
 COPY . /usr/src/app
 
